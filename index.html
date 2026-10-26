@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Khushkismat – local business directory</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f3ec;--surface:#fff;--ink:#1d2420;--muted:#7a8079;--line:#e6e1d4;--brand:#1f6f50;--brand2:#2fa57a;--gold:#e5a93d;--chip:#ecf3ee;--shadow:0 6px 24px rgba(20,40,30,.08);color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root:not([data-theme="light"]){}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1512;--surface:#16201b;--ink:#eaf1ec;--muted:#93a199;--line:#26332c;--chip:#1c2a23;--shadow:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0e1512;--surface:#16201b;--ink:#eaf1ec;--muted:#93a199;--line:#26332c;--chip:#1c2a23;--shadow:0 6px 24px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg)}
+body{font-family:'Inter','Noto Sans Devanagari',system-ui,sans-serif;color:var(--ink);transition:background .3s}
+h1,h2,h3{font-family:'Fraunces',serif;margin:0}
+button{font:inherit;cursor:pointer}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:12px 22px;background:color-mix(in srgb,var(--bg) 82%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+.logo{display:flex;align-items:center;gap:9px;font-family:'Fraunces',serif;font-weight:700;font-size:1.35rem;color:var(--brand);cursor:pointer;letter-spacing:-.01em}.logo svg{width:34px;height:34px;flex-shrink:0;filter:drop-shadow(0 3px 6px rgba(31,111,80,.3))}.logo b{color:#d18f1f;font-weight:700}
+.sub{flex:1;font-size:.82rem;color:var(--muted)}
+.pill{border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 13px;font-size:.82rem;font-weight:600}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px 80px}.narrow{max-width:660px}
+.hero{position:relative;overflow:hidden;border-radius:26px;padding:44px 32px;color:#fff;background:radial-gradient(circle at 15% 20%,#2fa57a 0,transparent 45%),radial-gradient(circle at 85% 80%,#e5a93d55 0,transparent 40%),linear-gradient(135deg,#124032,#1f6f50);margin-bottom:26px}
+.hero h1{font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.1;max-width:520px}
+.hero p{opacity:.88;margin:12px 0 22px;max-width:480px}
+.row{display:flex;gap:10px;align-items:center}.between{justify-content:space-between}.wrapx{flex-wrap:wrap}
+.stats{display:flex;gap:12px;margin-top:26px;flex-wrap:wrap}
+.stat{background:#ffffff1f;border:1px solid #ffffff33;backdrop-filter:blur(8px);border-radius:14px;padding:10px 16px}
+.stat b{display:block;font-size:1.3rem;font-family:'Fraunces',serif}.stat span{font-size:.75rem;opacity:.85}
+.btn{border:none;border-radius:12px;padding:12px 20px;font-weight:700;background:var(--gold);color:#2b2210;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(229,169,61,.35)}
+.btn.green{background:var(--brand);color:#fff}.btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink)}.btn.danger{background:transparent;border:1.5px solid #c4513a;color:#c4513a}
+.search{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.search input,.search select,.field input,.field select,.field textarea{flex:1;min-width:0;padding:13px 15px;border:1.5px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink);font:inherit;font-size:1rem;outline:none;transition:border .2s,box-shadow .2s}
+.search input:focus,.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--brand2);box-shadow:0 0 0 4px color-mix(in srgb,var(--brand2) 20%,transparent)}
+.search select{flex:0 0 auto}
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;scrollbar-width:none}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:99px;padding:8px 14px;font-size:.85rem;font-weight:500;transition:all .15s}
+.chip.on{background:var(--brand);color:#fff;border-color:var(--brand)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;overflow:hidden;cursor:pointer;box-shadow:var(--shadow);transition:transform .2s,box-shadow .2s;animation:rise .4s both}
+.card:hover{transform:translateY(-5px)}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}}
+.img{position:relative;height:150px;display:flex;align-items:center;justify-content:center;font-size:3rem;background:linear-gradient(135deg,var(--brand),var(--brand2))}
+.img img{width:100%;height:100%;object-fit:cover}
+.img .ic{position:absolute;top:10px;right:10px;display:flex;gap:6px}
+.round{width:34px;height:34px;border-radius:50%;border:none;background:#00000066;color:#fff;backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:.95rem;padding:0;flex-shrink:0}
+.round.solid{background:var(--brand)}.round.rec{background:#c4513a}
+.body{padding:16px}
+.badge{display:inline-block;font-size:.7rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--brand);background:var(--chip);padding:4px 10px;border-radius:99px}
+.card h3{font-size:1.15rem;margin:10px 0 6px}.card p{font-size:.9rem;color:var(--muted);margin:0 0 12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta{font-size:.82rem;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.star{color:var(--gold);font-weight:700}
+.empty{text-align:center;color:var(--muted);padding:60px 0}
+.field{display:flex;flex-direction:column;gap:6px;font-weight:500;font-size:.92rem;margin-bottom:16px}
+.field .lab{display:flex;align-items:center;gap:8px}
+.field textarea{min-height:100px;resize:vertical}
+.actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin:22px 0}
+.actions a,.actions button{text-decoration:none;text-align:center;border-radius:14px;padding:12px;font-weight:600;font-size:.9rem;background:var(--chip);color:var(--brand);border:1px solid var(--line)}
+.stars button{background:none;border:none;font-size:1.7rem;padding:2px;color:var(--line)}.stars button.on{color:var(--gold)}
+dl{display:grid;grid-template-columns:90px 1fr;gap:10px 12px;margin:0}dt{color:var(--muted);font-size:.85rem;font-weight:600}dd{margin:0}
+.hero-img{width:100%;max-height:280px;object-fit:cover;border-radius:18px;margin-bottom:18px}
+.toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 20px;border-radius:99px;font-weight:600;font-size:.9rem;z-index:40;animation:rise .25s}
+.back{display:inline-block;margin-bottom:18px;color:var(--brand);font-weight:600;cursor:pointer}
+.err{color:#c4513a}
+.sk{height:260px;border-radius:20px;background:linear-gradient(90deg,var(--chip),var(--line),var(--chip));background-size:200%;animation:sh 1.2s infinite}
+@keyframes sh{to{background-position:-200%}}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.26.4/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useMemo } = React;
+const CATS = [
+  ['Restaurant','रेस्टोरेंट','🍽️'],['Retail','दुकान','🛍️'],['Salon & Spa','सैलून और स्पा','💇'],['Automotive','वाहन सेवा','🔧'],
+  ['Health & Fitness','स्वास्थ्य और फिटनेस','💪'],['Home Services','घरेलू सेवाएं','🏠'],['Professional Services','पेशेवर सेवाएं','💼'],['Other','अन्य','✨'],
+];
+const HI = Object.fromEntries(CATS.map(c => [c[0], c[1]]));
+const EMO = Object.fromEntries(CATS.map(c => [c[0], c[2]]));
+const EMPTY = { name:'', category:'', description:'', address:'', phone:'', email:'', hours:'', imageUrl:'' };
+const SEED = [
+  { id:'seed-1', name:'Maple & Grain Bakery', category:'Restaurant', description:'Sourdough loaves, morning pastries, and slow-drip coffee in a sunlit corner shop.', address:'214 Elm Street', phone:'(555) 012-3344', email:'hello@mapleandgrain.com', hours:'Tue–Sun 7am–3pm', imageUrl:'', ratings:[5,5,4,5], added:3 },
+  { id:'seed-2', name:'Foothill Bike Repair', category:'Automotive', description:'Same-day tune-ups, tire repair, and custom builds for road and trail bikes.', address:'88 Ridgeline Ave', phone:'(555) 774-2200', email:'', hours:'Mon–Sat 9am–6pm', imageUrl:'', ratings:[4,5,4], added:2 },
+  { id:'seed-3', name:'Willow Studio Salon', category:'Salon & Spa', description:'Cut, color, and quiet — an appointment-only studio focused on healthy hair.', address:'19 Birch Lane', phone:'(555) 305-8891', email:'book@willowstudio.com', hours:'Wed–Sun 10am–7pm', imageUrl:'', ratings:[5,4], added:1 },
+];
+const avg = (b) => (b.ratings && b.ratings.length ? b.ratings.reduce((a, c) => a + c, 0) / b.ratings.length : 0);
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+
+const voice = { on: true };
+function speak(t) {
+  if (!voice.on) return;
+  try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'hi-IN'; u.rate = .95; speechSynthesis.speak(u); } catch (e) {}
+}
+const SR = () => window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function Speak({ text, cls = 'round solid' }) {
+  return <button type="button" className={cls} aria-label="सुनें" title="सुनने के लिए दबाएं" onClick={(e) => { e.stopPropagation(); speak(text); }}>🔊</button>;
+}
+function Mic({ onResult, prompt }) {
+  const [on, setOn] = useState(false);
+  function go() {
+    const R = SR();
+    if (!R) { speak('माफ़ कीजिए, यह ब्राउज़र आवाज़ से भरने की सुविधा नहीं देता।'); return; }
+    speak(prompt || 'अब बोलिए');
+    const r = new R(); r.lang = 'hi-IN'; r.interimResults = false;
+    r.onresult = (e) => { onResult(e.results[0][0].transcript); setOn(false); };
+    r.onerror = r.onend = () => setOn(false);
+    setTimeout(() => { try { r.start(); } catch (e) { setOn(false); } }, 650);
+    setOn(true);
+  }
+  return <button type="button" className={'round ' + (on ? 'rec' : 'solid')} aria-label="बोलकर भरें" onClick={go}>{on ? '●' : '🎤'}</button>;
+}
+
+function App() {
+  const [view, setView] = useState({ page: 'browse' });
+  const [list, setList] = useState([]);
+  const [favs, setFavs] = useState([]);
+  const [loaded, setLoaded] = useState(false);
+  const [q, setQ] = useState('');
+  const [cat, setCat] = useState('');
+  const [sort, setSort] = useState('new');
+  const [onlyFav, setOnlyFav] = useState(false);
+  const [voiceOn, setVoiceOn] = useState(true);
+  const [theme, setTheme] = useState('auto');
+  const [toast, setToast] = useState('');
+
+  useEffect(() => {
+    setList(lsGet('kk_biz_v2', SEED)); setFavs(lsGet('kk_favs', []));
+    const t = lsGet('kk_theme', 'auto'); setTheme(t); setLoaded(true);
+  }, []);
+  useEffect(() => {
+    if (theme === 'auto') document.documentElement.removeAttribute('data-theme');
+    else document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+  useEffect(() => {
+    if (!loaded) return;
+    const m = { browse:'यह मुख्य पृष्ठ है। यहां आप नज़दीकी दुकानों और सेवाओं को खोज सकते हैं।', add:'यह फॉर्म है नया व्यवसाय जोड़ने के लिए। हर खाने के आगे माइक दबाकर बोलें।', edit:'यहां आप अपनी जानकारी बदल सकते हैं।', detail:'यह व्यवसाय की पूरी जानकारी है। सुनने के लिए सुनें बटन दबाएं।' };
+    speak(m[view.page]); window.scrollTo(0, 0);
+  }, [view.page, loaded]);
+
+  const note = (m) => { setToast(m); setTimeout(() => setToast(''), 2200); };
+  const save = (n) => { setList(n); lsSet('kk_biz_v2', n); };
+  const toggleFav = (id) => {
+    const n = favs.includes(id) ? favs.filter((f) => f !== id) : [...favs, id];
+    setFavs(n); lsSet('kk_favs', n); note(n.includes(id) ? '❤️ Saved to favourites' : 'Removed from favourites');
+  };
+  const rate = (id, s) => { save(list.map((b) => b.id === id ? { ...b, ratings: [...(b.ratings || []), s] } : b)); note('⭐ Thanks for rating!'); speak('आपकी रेटिंग के लिए धन्यवाद।'); };
+  const cycleTheme = () => { const n = theme === 'auto' ? 'dark' : theme === 'dark' ? 'light' : 'auto'; setTheme(n); lsSet('kk_theme', n); };
+  const toggleVoice = () => { const n = !voiceOn; voice.on = n; setVoiceOn(n); if (n) speak('आवाज़ चालू हो गई'); else try { speechSynthesis.cancel(); } catch (e) {} };
+
+  const shown = useMemo(() => {
+    const s = q.toLowerCase();
+    let r = list.filter((b) => (!cat || b.category === cat) && (!onlyFav || favs.includes(b.id)) &&
+      (!s || b.name.toLowerCase().includes(s) || b.description.toLowerCase().includes(s) || b.address.toLowerCase().includes(s)));
+    if (sort === 'az') r = [...r].sort((a, b) => a.name.localeCompare(b.name));
+    if (sort === 'top') r = [...r].sort((a, b) => avg(b) - avg(a));
+    return r;
+  }, [list, favs, q, cat, sort, onlyFav]);
+
+  const biz = list.find((b) => b.id === view.id);
+  return (
+    <div>
+      <header className="top">
+        <span className="logo" onClick={() => setView({ page: 'browse' })}><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#1f6f50" /><stop offset="1" stopColor="#2fa57a" /></linearGradient></defs><rect width="32" height="32" rx="10" fill="url(#lg)" /><path d="M16 5.5l2.7 7.8 7.8 2.7-7.8 2.7L16 26.5l-2.7-7.8L5.5 16l7.8-2.7z" fill="#fff" /><circle cx="25" cy="7" r="2.6" fill="#e5a93d" /></svg><span>Khush<b>kismat</b></span></span>
+        <span className="sub">local business directory</span>
+        <button className="pill" onClick={cycleTheme} title="Theme">{theme === 'dark' ? '🌙 Dark' : theme === 'light' ? '☀️ Light' : '🌓 Auto'}</button>
+        <button className="pill" onClick={toggleVoice}>{voiceOn ? '🔊 आवाज़ चालू' : '🔇 आवाज़ बंद'}</button>
+      </header>
+      {!loaded ? <div className="wrap"><div className="grid"><div className="sk" /><div className="sk" /><div className="sk" /></div></div>
+      : view.page === 'browse' ? (
+        <div className="wrap">
+          <div className="hero">
+            <div className="row between"><h1>Find businesses near you</h1><Speak cls="round" text="यह मुख्य पृष्ठ है। यहां आप नज़दीकी दुकानों और सेवाओं को खोज सकते हैं।" /></div>
+            <p>Discover and support local shops, restaurants, and services — now with ratings, favourites and one‑tap contact.</p>
+            <button className="btn" onClick={() => setView({ page: 'add' })}>+ List your business</button>
+            <div className="stats">
+              <div className="stat"><b>{list.length}</b><span>Businesses</span></div>
+              <div className="stat"><b>{new Set(list.map((b) => b.category)).size}</b><span>Categories</span></div>
+              <div className="stat"><b>{favs.length}</b><span>Favourites</span></div>
+            </div>
+          </div>
+          <div className="search">
+            <input placeholder="Search by name, service or area..." value={q} onChange={(e) => setQ(e.target.value)} />
+            <Mic prompt="व्यवसाय का नाम बोलिए, जैसे बेकरी या सैलून" onResult={setQ} />
+            <select value={sort} onChange={(e) => setSort(e.target.value)}>
+              <option value="new">Newest</option><option value="top">Top rated</option><option value="az">A → Z</option>
+            </select>
+            <Speak text="यहां व्यवसाय का नाम लिखें या माइक दबाकर बोलें। ऊपर श्रेणी चुनें और छांटने का तरीका चुनें।" />
+          </div>
+          <div className="chips">
+            <button className={'chip' + (!cat ? ' on' : '')} onClick={() => setCat('')}>All</button>
+            {CATS.map((c) => <button key={c[0]} className={'chip' + (cat === c[0] ? ' on' : '')} onClick={() => setCat(cat === c[0] ? '' : c[0])}>{c[2]} {c[0]}</button>)}
+            <button className={'chip' + (onlyFav ? ' on' : '')} onClick={() => setOnlyFav(!onlyFav)}>❤️ Favourites</button>
+          </div>
+          {shown.length === 0 ? <p className="empty">No businesses found. Try a different search.</p> : (
+            <div className="grid">
+              {shown.map((b, i) => (
+                <div key={b.id} className="card" style={{ animationDelay: i * 50 + 'ms' }} onClick={() => setView({ page: 'detail', id: b.id })}>
+                  <div className="img">
+                    {b.imageUrl ? <img src={b.imageUrl} alt={b.name} /> : <span>{EMO[b.category] || '🏪'}</span>}
+                    <div className="ic">
+                      <button className="round" aria-label="Favourite" onClick={(e) => { e.stopPropagation(); toggleFav(b.id); }}>{favs.includes(b.id) ? '❤️' : '🤍'}</button>
+                      <Speak cls="round" text={`${b.name}. श्रेणी: ${HI[b.category] || b.category}. पता: ${b.address}.`} />
+                    </div>
+                  </div>
+                  <div className="body">
+                    <span className="badge">{b.category}</span>
+                    <h3>{b.name}</h3>
+                    <p>{b.description}</p>
+                    <div className="meta"><span>📍 {b.address}</span><span className="star">{avg(b) ? '★ ' + avg(b).toFixed(1) : 'New'}</span></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      ) : view.page === 'detail' ? (
+        <Detail b={biz} fav={biz && favs.includes(biz.id)} onFav={() => toggleFav(biz.id)} onRate={(s) => rate(biz.id, s)} note={note}
+          onBack={() => setView({ page: 'browse' })} onEdit={() => setView({ page: 'edit', id: view.id })}
+          onDelete={() => { save(list.filter((x) => x.id !== view.id)); speak('यह व्यवसाय हटा दिया गया है।'); note('Listing removed'); setView({ page: 'browse' }); }} />
+      ) : (
+        <Form key={view.page} isEdit={view.page === 'edit'} initial={view.page === 'edit' ? (biz || EMPTY) : EMPTY}
+          onCancel={() => setView(view.page === 'edit' ? { page: 'detail', id: view.id } : { page: 'browse' })}
+          onSubmit={(d) => {
+            if (view.page === 'edit') { save(list.map((x) => x.id === view.id ? { ...x, ...d } : x)); speak('जानकारी बदल दी गई है।'); note('✅ Listing updated'); setView({ page: 'detail', id: view.id }); }
+            else { save([{ ...d, id: 'b-' + Date.now(), ratings: [], added: Date.now() }, ...list]); speak('आपका व्यवसाय जुड़ गया है। धन्यवाद।'); note('🎉 Business listed!'); setView({ page: 'browse' }); }
+          }} />
+      )}
+      {toast && <div className="toast">{toast}</div>}
+    </div>
+  );
+}
+
+function Detail({ b, fav, onFav, onRate, note, onBack, onEdit, onDelete }) {
+  const [hover, setHover] = useState(0);
+  if (!b) return <p className="empty">Listing not found.</p>;
+  const digits = b.phone.replace(/[^\d+]/g, '');
+  const readout = `${b.name}. श्रेणी: ${HI[b.category] || b.category}. ${b.description}. पता: ${b.address}. फ़ोन नंबर: ${b.phone}.${b.hours ? ' समय: ' + b.hours + '.' : ''}`;
+  async function share() {
+    const text = `${b.name} — ${b.address}, ${b.phone}`;
+    try { if (navigator.share) await navigator.share({ title: b.name, text }); else { await navigator.clipboard.writeText(text); note('📋 Details copied'); } } catch (e) { note('Could not share'); }
+  }
+  return (
+    <div className="wrap narrow">
+      <span className="back" onClick={onBack}>← Back to all businesses</span>
+      {b.imageUrl && <img className="hero-img" src={b.imageUrl} alt={b.name} />}
+      <div className="row between">
+        <div><span className="badge">{EMO[b.category]} {b.category}</span><h1 style={{ margin: '10px 0 4px', fontSize: '2rem' }}>{b.name}</h1>
+          <span className="star">{avg(b) ? '★ ' + avg(b).toFixed(1) : 'No ratings yet'}</span> <span style={{ color: 'var(--muted)', fontSize: '.85rem' }}>({(b.ratings || []).length} reviews)</span></div>
+        <div className="row"><button className="round" style={{ background: 'var(--chip)' }} onClick={onFav} aria-label="Favourite">{fav ? '❤️' : '🤍'}</button><button className="btn" onClick={() => speak(readout)}>🔊 सुनें</button></div>
+      </div>
+      <p style={{ color: 'var(--muted)', margin: '14px 0 0', lineHeight: 1.6 }}>{b.description}</p>
+      <div className="actions">
+        <a href={'tel:' + digits}>📞 Call</a>
+        <a href={'https://wa.me/' + digits.replace('+', '')} target="_blank" rel="noopener">💬 WhatsApp</a>
+        <a href={'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(b.name + ' ' + b.address)} target="_blank" rel="noopener">🧭 Directions</a>
+        <button onClick={share}>↗ Share</button>
+      </div>
+      <dl>
+        <dt>Address</dt><dd>{b.address}</dd><dt>Phone</dt><dd>{b.phone}</dd>
+        {b.email && <><dt>Email</dt><dd>{b.email}</dd></>}{b.hours && <><dt>Hours</dt><dd>{b.hours}</dd></>}
+      </dl>
+      <h3 style={{ margin: '28px 0 6px' }}>Rate this business</h3>
+      <div className="stars" onMouseLeave={() => setHover(0)}>
+        {[1, 2, 3, 4, 5].map((s) => <button key={s} className={s <= hover ? 'on' : ''} onMouseEnter={() => setHover(s)} onClick={() => onRate(s)} aria-label={s + ' stars'}>★</button>)}
+      </div>
+      <div className="row" style={{ marginTop: 28 }}>
+        <button className="btn ghost" onClick={onEdit}>Edit listing</button>
+        <button className="btn danger" onClick={onDelete}>Remove listing</button>
+      </div>
+    </div>
+  );
+}
+
+function Form({ isEdit, initial, onCancel, onSubmit }) {
+  const [f, setF] = useState(initial);
+  const [err, setErr] = useState('');
+  const ch = (e) => setF({ ...f, [e.target.name]: e.target.value });
+  const set = (k, v) => setF((o) => ({ ...o, [k]: v }));
+  function submit(e) {
+    e.preventDefault();
+    if (!f.name || !f.category || !f.description || !f.address || !f.phone) { setErr('Please fill in all required fields.'); speak('कृपया सभी ज़रूरी खाने भरें।'); return; }
+    onSubmit(f);
+  }
+  const Field = (name, label, hint, prompt, extra = {}) => (
+    <label className="field" key={name}>
+      <span className="lab">{label}<Speak text={hint} /></span>
+      <div className="row">
+        <input name={name} value={f[name]} onChange={ch} {...extra} />
+        {prompt && <Mic prompt={prompt} onResult={(t) => set(name, t)} />}
+      </div>
+    </label>
+  );
+  return (
+    <div className="wrap narrow">
+      <div className="row between"><h1 style={{ fontSize: '2rem' }}>{isEdit ? 'Edit listing' : 'List your business'}</h1>
+        <Speak text="हर खाने के आगे माइक बटन दबाकर आप बोलकर भर सकते हैं। भोंपू बटन दबाकर सुन सकते हैं कि क्या लिखना है।" /></div>
+      <p style={{ color: 'var(--muted)', marginBottom: 24 }}>{isEdit ? 'Update your business details.' : 'Get discovered by people searching nearby.'}</p>
+      <form onSubmit={submit}>
+        {Field('name', 'Business name *', 'यहां अपनी दुकान का नाम बोलें, जैसे राज जनरल स्टोर', 'व्यवसाय का नाम बोलिए')}
+        <label className="field"><span className="lab">Category *<Speak text="नीचे सूची में से अपने व्यवसाय की श्रेणी चुनें" /></span>
+          <select name="category" value={f.category} onChange={ch}><option value="">Select a category</option>
+            {CATS.map((c) => <option key={c[0]} value={c[0]}>{c[2]} {c[0]} — {c[1]}</option>)}</select></label>
+        <label className="field"><span className="lab">Description *<Speak text="अपने व्यवसाय के बारे में दो या तीन वाक्य बोलें" /></span>
+          <div className="row"><textarea name="description" value={f.description} onChange={ch} maxLength={500} />
+            <Mic prompt="अपने व्यवसाय के बारे में बताइए" onResult={(t) => set('description', t)} /></div></label>
+        {Field('address', 'Address *', 'अपनी दुकान का पूरा पता बोलें', 'पता बोलिए')}
+        {Field('phone', 'Phone *', 'अपना फ़ोन नंबर बोलें', 'फ़ोन नंबर बोलिए', { type: 'tel' })}
+        {Field('email', 'Email (optional)', 'अगर ईमेल है तो लिखें, नहीं तो खाली छोड़ दें', null, { type: 'email' })}
+        {Field('hours', 'Hours (optional)', 'अपनी दुकान खुलने और बंद होने का समय बोलें', 'अपने काम के घंटे बोलिए', { placeholder: 'e.g. Mon–Sat 9am–8pm' })}
+        {Field('imageUrl', 'Photo URL (optional)', 'अगर फ़ोटो का लिंक है तो यहां डालें, नहीं तो खाली छोड़ दें', null)}
+        {err && <p className="err">{err}</p>}
+        <div className="row"><button type="button" className="btn ghost" onClick={onCancel}>Cancel</button><button type="submit" className="btn green">Save listing</button></div>
+      </form>
+    </div>
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
